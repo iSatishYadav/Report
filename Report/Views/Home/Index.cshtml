@@ -1,8 +1,70 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home";
 }
-@section scripts{
+
+<div class="card-group">
+    <div class="card card-inverse card-success report-tile" id="itTab" data-report="305717a3-1a76-475a-9bde-719e563904ae">
+        @*<i class="fa fa-3x fa-apple card-img-top img-fluid"></i>*@
+        <img class="card-img-top img-fluid" src="http://expressit-usa.net/wp-content/uploads/2015/11/International-trade-and-America.jpg" />
+        <div class="card-block">
+            <h4 class="card-title">International Trade</h4>
+            <p class="card-text">Get an insight on International Trade</p>
+        </div>
+    </div>
+    <div class="card card-inverse card-danger report-tile" id="treasuryTab" data-report="88f0df65-452a-4712-8081-5f34a3747c01">
+        @*<i class="fa fa-3x fa-apple card-img-top img-fluid"></i>*@
+        <img class="card-img-top img-fluid" src="https://sovman-w3tc-sovereignman.s3.amazonaws.com/wp-content/uploads/2013/06/shutterstock_138339140.jpg?x64025" />
+        <div class="card-block">
+            <h4 class="card-title">Treasury</h4>
+            <p class="card-text">Daily report from Treasury</p>
+        </div>
+    </div>
+</div>
+<div id="dateModal">
+
+</div>
+@section Scripts {
+    <script type="text/x-jsrender" id="dateModalTemplate">
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="datePick-label">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="datePick-label">Choose Date</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action='@Url.Action("Index", "Home", new { area = ""})' class="form-inline">
+                            <label class="sr-only" for="reportDate"></label>
+                            <div class="input-group">
+                                <div class="input-group-addon"><span class="fa fa-calendar"></span></div>
+                                <input type="text" data-provide="datepicker" data-date-end-date="0d" id="reportDate" name="date" required autocomplete="off" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-success">View</button>
+                                </span>
+                            </div>
+                            <input type="hidden" aria-hidden="true" name="id" value="{{:id}}" required />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" aria-label="Cancel button" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
     <script>
-        $(".modal").modal("show");
+        $(document).ready(function () {
+            $(".report-tile").click(function () {
+                var self = $(this);
+                var reportId = self.data("report");
+                var $modalTemplate = $.templates("#dateModalTemplate");
+                var data = { id: reportId };
+                var modalHtml = $modalTemplate.render(data);
+                var $dataModel = $("#dateModal");
+                $dataModel.html(modalHtml).find(".modal").modal("show").find("#reportDate").focus();
+
+                //location = '@Url.Action("Index", "Report", new {id = " "} )'.trim() + reportId;
+            });
+        });
     </script>
 }

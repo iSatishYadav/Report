@@ -2,39 +2,69 @@
 <html lang="en">
 <head>
     <!-- Required meta tags -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-    <title>@ViewBag.Title - .NET Application</title>
+    <title>@ViewBag.Title - BPCL Reports</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    <link rel="icon" href="~/Content/images/favicon-bar-chart.ico" />
+    <link rel="shortcut icon" href="~/Content/images/favicon-bar-chart.ico" />
+    <meta name="description" content="Reports for BPCL" />
 </head>
-<body>
-    <nav class="navbar navbar-toggleable-md navbar-inverse">
-        <button type="button" class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle Navigation" aria-expanded="false" aria-controls="navbarSupportedContent">
+<body class="container-fluid">
+    <nav class="navbar navbar-toggleable-md bg-primary navbar-inverse fixed-top">
+        <button type="button" class="navbar-toggler navbar-toggler-left" data-toggle="collapse" data-target="#navbarSupportedContent" aria-label="Toggle Navigation" aria-expanded="false" aria-controls="navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
-        @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("About", "About", "Home")</li>
-                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+        <a href='@Url.Action("Index", "Home", new { area = "" })' class="navbar-brand text-center">
+            <i class="fa fa-bar-chart fa-fw"></i>
+            Reports
+        </a>
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
+                <li class="nav-item"><span class="nav-link report-tile" data-report="305717a3-1a76-475a-9bde-719e563904ae">International Trade</span></li>
+                <li class="nav-item"><span class="nav-link report-tile" data-report="88f0df65-452a-4712-8081-5f34a3747c01">Treasury</span></li>
             </ul>
-            @Html.Partial("_LoginPartial")
+
+            @*@Html.Partial("_LoginPartial")*@
         </div>
     </nav>
     <div class="container body-content">
+        @{
+            var error = ViewBag.Error;
+            if (error != null)
+            {
+                var errorType = ViewBag.ErrorType ?? "danger";
+                <div class="alert alert-@errorType alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div>
+                        <h4>Error</h4>
+                        <p>@error</p>
+                    </div>
+                </div>
+            }
+        }
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - BPCL</p>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $(".container-fluid").swipe({
+                swipe: function (event, direction, distance, duration, fingerCount, fingerData, currentDirection) {
+                    console.log(event + "" + direction + "" + distance + "" + duration + "" + fingerCount + "" + fingerData + "" + currentDirection);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

@@ -9,7 +9,10 @@ namespace Report
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery.touchSwipe.js",
+                        "~/Scripts/jsrender/jsrender.js"
+                        ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -20,12 +23,18 @@ namespace Report
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+                      "~/Scripts/tether/tether.js",
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap/bootstrap.css",
+                      "~/Content/font-awesome.css",
+                      "~/Content/bootstrap-datepicker3.standalone.css",
                       "~/Content/site.css"));
         }
     }
 }
+
+

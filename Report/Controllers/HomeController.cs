@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Report.Models;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,18 +15,50 @@ namespace Report.Controllers
             return View();
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public ActionResult Index(string id, DateTime date)
         {
-            ViewBag.Message = "Your application description page.";
+            #region Future date, double check
+            if (date > DateTime.Now)
+            {
+                ViewBag.ErrorType = "danger";
+                ViewBag.Error = "Report not available yet.";
+                return View("Index");
+            }
+            #endregion
+            var data = new ReportData();
+            var department = data.GetDepartmentById(id);
+            #region If id is tempered
+            if (string.IsNullOrEmpty(department))
+            {
+                ViewBag.ErrorType = "danger";
+                ViewBag.Error = "Report not available yet.";
+                return View("Index");
+            }
+            #endregion
+            var folder = ConfigurationManager.AppSettings["fileServerFolder"];
+            //date = new DateTime(2017, 01, 01);
+            var path = data.GetPathByDate(date, folder, department);
+            if (System.IO.File.Exists(path))
+            {
+                return RedirectToAction("Pdf", new { path = path });
+            }
+            else
+            {
 
-            return View();
+                if (date.Date == DateTime.Now.Date)
+                    return RedirectToAction("Pdf", new { path = data.Get404PdfPath() });
+                //return HttpNotFound("File not found");
+                ViewBag.ErrorType = "danger";
+                ViewBag.Error = String.Format("Report not found for {0} department for date {1}", department, date.ToShortDateString());
+                return View("Index");
+            }
         }
 
-        public ActionResult Contact()
+        //[OutputCache(Duration = 60, VaryByParam = "path")]
+        public FileResult Pdf(string path)
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return File(path, "application/pdf");
         }
     }
 }
